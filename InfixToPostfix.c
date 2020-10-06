@@ -29,29 +29,33 @@ void push(char val)
 }
 
 char pop()
-{
+{	
+	char val=' ';
 	if(top==-1)
 	{
-		return;	   
+		printf("STack Overflow\n");  
 	}
 	else
 	{
-		return stack[top--];
+		val=stack[top--];
 	
-	}	   
+	}
+	return val;	   
 }
 
 
 char peep()
-{
+{	
+	char val=' ';
 	if(top==-1)
 	{
-		return;	   
+		printf("Stack Overflow\n");  
 	}
 	else
 	{
-		return stack[top];
+		val=stack[top];
 	}
+	return val;
 }
 
 int main()
@@ -63,7 +67,7 @@ int main()
 	infixtopostfix(infix,postfix);
 	
 	printf("The Postfix expression is %s",postfix);
-	puts(postfix);
+	
 	
 	return 0;
 	
@@ -94,7 +98,7 @@ void infixtopostfix(char infix[],char postfix[])
 			}
 			else if(infix[i]==')')
 			{
-				while(peep()!='(')
+				while(peep()!='('&& top!=-1)
 				{
 					postfix[j++]=pop();	   	   	   	   
 				}
@@ -102,27 +106,43 @@ void infixtopostfix(char infix[],char postfix[])
 			
 			
 			}
-			else
-			{
-				while(getprecedance(peep())>getprecedance(infix[i]))
+			else if (infix[i]=='+'||infix[i]=='-'||infix[i]=='/'||infix[i]=='*'||infix[i]=='%')
+			{	if(peep()=='(')
+				{
+					push(infix[i]);
+				}
+				else if(getprecedance(peep())<getprecedance(infix[i]) && top!=-1 && peep()!='(') 
 				{
 					
-					postfix[j++]=pop();
+					push(infix[i]);
 				
 				}
-				push(infix[i]);
+				else
+				{
+					postfix[j++]=pop();
+					push(infix[i]);
+
+				}
+				
+				
 			
-			
+			}
+			else
+			{
+
+				printf("Invalid expression\n");
+				exit(0);
 			}
 			i++;
 			
 	   
 	   }
-	   while((top!=-1&&peep()!='('))
+	   while((top!=-1 && peep()!='('))
 	   {
 	   		postfix[j++]=pop();
 	   }
 	   postfix[j]='\0';
+	   
 
 
 
@@ -144,6 +164,12 @@ int getprecedance(char c)
 
 
 }
+
+
+
+
+
+
 
 
 
